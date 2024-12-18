@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1086539852375",
+    "project_id": "myworkapp-834e3",
+    "storage_bucket": "myworkapp-834e3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1086539852375:android:6fc38af71eb1f9d5f75112",
+        "android_client_info": {
+          "package_name": "com.basiccrudoperation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJtZ1f2825CXydKOnuwBDj3aVTNXq6q_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
