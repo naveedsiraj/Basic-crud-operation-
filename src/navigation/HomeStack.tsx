@@ -1,20 +1,23 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet } from 'react-native';
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from '../screens/Home';
-import SignInScreen from '../screens/SignInscreen';
+import Notifictionscreen from '../screens/Notifictionscreen';
 
 const Stack = createStackNavigator();
 
 const HomeStack = () => {
   return (
-      <Stack.Navigator initialRouteName="Login">
-      <Stack.Screen name="Homescreen" component={Home} />
-      <Stack.Screen name="createAccount" component={SignInScreen} />
-     </Stack.Navigator>
-  )
-}
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="NotificationScreen" component={Notifictionscreen} />
+    </Stack.Navigator>
+  );
+};
 
-export default HomeStack
+export default HomeStack;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

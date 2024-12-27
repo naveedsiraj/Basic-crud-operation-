@@ -1,187 +1,121 @@
-// import React, { useContext, useEffect, useState } from "react";
-// import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-// import { AuthContext } from "../context/AuthContext";
-// import HomeStack from "../navigation/HomeStack";
-// import SignInScreen from "../screens/SignInscreen";
-
-// // Verification Screen Component
-// const VerificationScreen = () => {
-//   return (
-//     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-//       <Text style={{ fontSize: 16, textAlign: "center", color: "black" }}>
-//         Go and verify your email, then restart your app.
-//       </Text>
-//     </View>
-//   );
-// };
-
-// const AuthChecker = () => {
-//   const { user, initializing, loading }: any = useContext(AuthContext);
-//   const [isVerified, setIsVerified] = useState(false); // Local state for verification status
-//   const [isLoading, setIsLoading] = useState(true); // Track loading state
-
-//   // console.log( {user} );
-
-//   useEffect(() => {
-//     const checkEmailVerification = async () => {
-//       if (user && user._auth && user._auth.currentUser) {
-//         try {
-//           // Reload user to get the latest email verification status
-//           await user._auth.currentUser.reload(); // Use the correct `currentUser`
-//           const updatedUser = user._auth.currentUser;
-
-//           // Update verification state based on emailVerified
-//           if (updatedUser.emailVerified) {
-//             setIsVerified(true); // Email is verified
-//           } else {
-//             setIsVerified(false); // Email not verified
-//           }
-//           setIsLoading(false); // Stop loading once verification is checked
-//         } catch (error) {
-//           console.error("Error checking email verification:", error);
-//           setIsLoading(false); // Stop loading on error
-//         }
-//       } else {
-//         setIsLoading(false); // If no user, stop loading and show sign in
-//       }
-//     };
-
-//     if (!initializing && !loading) {
-//       checkEmailVerification();
-//     }
-//   }, [user, initializing, loading]);
-
-//   // Show a loading screen if the app is still initializing or checking user status
-//   if (initializing || loading || isLoading) {
-//     return (
-//       <View style={styles.loadingContainer}>
-//         <ActivityIndicator color="red" size="large" />
-//       </View>
-//     );
-//   }
-
-//   // If the user is not logged in, show SignInScreen
-//   if (!user) {
-//     return <SignInScreen />;
-//   }
-
-//   // If the user is logged in but email is not verified, show VerificationScreen
-//   if (!isVerified) {
-//     return <VerificationScreen />;
-//   }
-
-//   // If user is verified, show HomeStack (main content)
-//   return <HomeStack />;
-// };
-
-// export default AuthChecker;
-
-// const styles = StyleSheet.create({
-//   loadingContainer: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     backgroundColor: "#f5f5f5",
-//   },
-// });
-
-import React, { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View, Button, Alert } from "react-native";
+import React, { useContext, useState, useEffect } from "react";
+import { View, Text, ActivityIndicator, Alert } from "react-native";
 import { AuthContext } from "../context/AuthContext";
+import HomeTab from "../navigation/HomeTab";
 
-import auth from "@react-native-firebase/auth";
-import SignInScreen from "../screens/SignInscreen";
+import messaging from '@react-native-firebase/messaging';
+import { showMessage, hideMessage } from "react-native-flash-message";
+import { navigationRef } from "../navigation/NavigationRef";
 import HomeStack from "../navigation/HomeStack";
+import SignInScreen from "./SignInscreen";
 
-const VerificationScreen = () => {
-  const { user,addUserToFirestoreAfterVerification }:any = useContext(AuthContext);
-  const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [loading, setLoading] = useState(false);
+const AuthChecker = () => {
+  const { user, loading, initializing }: any = useContext(AuthContext);
 
 
-  console.log({ user })
-  console.log({isEmailVerified})
-
-  // Check email verification status
+  // listen to FOREGROUND messeging
   useEffect(() => {
-    const checkVerification = async () => {
-      if (user) {
-        await auth().currentUser?.reload(); // Ensure the current user is updated
-        const isVerified = auth().currentUser?.emailVerified || false;
-        setIsEmailVerified(isVerified);
 
-        if (isVerified) {
-          // Add user to Firestore only when email is verified
-          addUserToFirestoreAfterVerification();
-        }
-      }
-    };
-    if (user) {
-      checkVerification();
-    }
-  }, [user]);
+     messaging().onMessage( remoteMessage => {
+      const { notification } = remoteMessage;
+      
+       const Title = notification?.title
+       const Descciption = notification?.body
+      if (notification) {
+        console.log(
+          'A new message arrived! (FOREGROUND)',
+          JSON.stringify(remoteMessage),
+        );
+       } 
+       
+       showMessage({
+        message: Title as string,
+        description: Descciption as string,
+        type: "default",
+        backgroundColor: "purple",
+        color: "#FFFFFF"
+      });
+     
+     })
+    
+    // listen to kill state message 
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      
+setTimeout(() => {
+  const { notification } = remoteMessage;
+  const Title = notification?.title
+  const Descciption = notification?.body
+  console.log(
+            'App opened from BACKGROUND by tapping notification:',
+            JSON.stringify(remoteMessage),
+          );
+}, 3000)
+      
+  
+     })
+  
+     messaging()
+     .getInitialNotification()
+       .then(remoteMessage => {
+         console.log(remoteMessage, 'app open from kill state tapping notification')
+       setTimeout(() => {
+        //  if (navigationRef.isReady()) {
+          //  console.log({navigationRef})
+           if (remoteMessage?.data) {
+             console.log('Notification Data:', remoteMessage.data);
+            //  navigationRef.navigate('HomeTab', {
+            //    screen: 'Settings', // Navigate to the Settings screen
+            //    params: {
+            //      notificationData: remoteMessage.data, // Pass notification data
+            //    },
+            //  });
+          //  } else {
+          //    navigationRef.navigate('HomeTab', {
+          //      screen: 'HomeStack',
+          //    });
+           }
+        //  }
+       },5000);
+     })
+     .catch(error => console.error('Error fetching initial notification:', error));
 
-  if (!user) {
-    return <SignInScreen />;
-  }
+ 
+  }, [])
 
-  if (loading) {
+
+  // listen to backgroundsseging
+
+
+
+  
+  if (loading || initializing) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text style={styles.loadingText}>Checking verification...</Text>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#f8f9fa",
+        }}
+      >
+        <ActivityIndicator color={"red"} size={"large"} />
+        <Text>Please wait...</Text>
       </View>
     );
   }
 
-  return isEmailVerified ? (
-    <HomeStack />
-  ) : (
-    <View style={styles.container}>
-      <Text style={styles.text}>
-        Please verify your email to access the app. Check your email inbox for the verification link.
-      </Text>
-      <Button
-        title="Resend Verification Email"
-        onPress={async () => {
-          setLoading(true);
-          try {
-            await auth().currentUser?.sendEmailVerification();
-            Alert.alert("Verification Email Sent", "Please check your inbox.");
-          } catch (error:any) {
-            Alert.alert("Error", error.message);
-          } finally {
-            setLoading(false);
-          }
-        }}
-      />
-    </View>
-  );
+
+  // Conditional rendering based on authentication status
+  return user ? <HomeTab /> : <SignInScreen/>;
+  // // If no user found, show SignInScreen
+  // if (!user) {
+  //    <SignInScreen />
+  // }
+
+
+
+  // If user is authenticated, show the HomeTab
+  // return <HomeTab />;
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 20,
-  },
-  text: {
-    fontSize: 16,
-    textAlign: "center",
-    color: "black",
-    marginBottom: 20,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: "black",
-  },
-});
-
-export default VerificationScreen;
+export default AuthChecker;
