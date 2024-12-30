@@ -1,5 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
-import {Alert, Linking, PermissionsAndroid, Platform} from 'react-native';
+import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 
 export const usePushNotification = () => {
@@ -62,6 +64,35 @@ export const usePushNotification = () => {
     }
   };
 
+
+  const saveTokenToFirestore = async () => {
+    try {
+      // Get the FCM token
+      const token = await messaging().getToken();
+  
+      // Check if there's a current user (assuming you're using Firebase Auth)
+      const user = auth().currentUser;
+  
+      if (user) {
+        const uid = user.uid;
+  
+        // Save the token to Firestore under the 'users' collection
+        await firestore()
+          .collection('users')
+          .doc(uid)
+          .update({
+            fcmToken: token,
+          });
+  
+        console.log('Token saved to Firestore for user:', uid);
+      } else {
+        console.log('No user is logged in');
+      }
+    } catch (error) {
+      console.error('Error saving token to Firestore:', error);
+    }
+  };
+
   
   // const listenToForegroundNotifications = async () => {
   //   const unsubscribe = messaging().onMessage(async remoteMessage => {
@@ -113,6 +144,8 @@ export const usePushNotification = () => {
   //     );
   //   }
   // };
+
+  
 
   return {
     requestUserPermission,

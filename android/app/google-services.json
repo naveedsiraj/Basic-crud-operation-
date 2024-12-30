@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "1086539852375",
-    "project_id": "myworkapp-834e3",
-    "storage_bucket": "myworkapp-834e3.firebasestorage.app"
+    "project_number": "76006492788",
+    "project_id": "mytestproect-cd964",
+    "storage_bucket": "mytestproect-cd964.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1086539852375:android:6fc38af71eb1f9d5f75112",
+        "mobilesdk_app_id": "1:76006492788:android:d0f40ca39521cff1531f21",
         "android_client_info": {
           "package_name": "com.basiccrudoperation"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDJtZ1f2825CXydKOnuwBDj3aVTNXq6q_I"
+          "current_key": "AIzaSyAJOEULtoPsg8ofs5XzsGnBmRIC-GTpUBg"
         }
       ],
       "services": {

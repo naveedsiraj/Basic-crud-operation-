@@ -1,22 +1,23 @@
 import { StyleSheet } from 'react-native';
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Home from '../screens/Home';
-import Notifictionscreen from '../screens/ResultScreen';
+import Generationscreen from '../screens/Generationscreen';
+import ResultScreen from '../screens/ResultScreen';
 
 const Stack = createStackNavigator();
 
-const HomeStack = () => {
+const ResultStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="GenerateVideo" component={Generationscreen} />
+      <Stack.Screen name="ResultScreen" component={ResultScreen} />
     </Stack.Navigator>
   );
 };
 
-export default HomeStack;
+export default ResultStack;
 
 const styles = StyleSheet.create({});

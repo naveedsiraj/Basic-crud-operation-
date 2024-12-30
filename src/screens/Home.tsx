@@ -105,9 +105,15 @@ const Home = () => {
     fetchTodos();  // Fetch todos when the component mounts
   }, []);
 
-  function notificationscreennaviagte() { 
-   navigate('NotificationScreen')
-  }
+  // function notificationscreennaviagte() { 
+
+  //     // Create an object to pass as params
+  // const Data = {
+  //   name: 'John Doe',
+  //   age: 30,
+  // };
+  //  navigate('NotificationScreen', { notificationData: Data });
+  // }
 
   return (
     <View style={styles.container}>
@@ -159,12 +165,12 @@ const Home = () => {
         )}
       />
 
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.naviagtebtn}
                 onPress={notificationscreennaviagte} // Call delete function with index
               >
-                <Text style={styles.deleteButtonText}>Delete</Text>
-              </TouchableOpacity>
+                <Text style={styles.naviagtebtnText}>Delete</Text>
+              </TouchableOpacity> */}
 
     </View>
   );

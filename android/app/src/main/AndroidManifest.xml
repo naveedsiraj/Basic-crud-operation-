@@ -1,10 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.basiccrudoperation">
 
-    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
       android:name=".MainApplication"
@@ -15,21 +14,11 @@
       android:theme="@style/AppTheme"
       android:supportsRtl="true">
 
-      <!-- Firebase Cloud Messaging -->
-      <meta-data
-        android:name="com.google.firebase.messaging.default_notification_icon"
-        android:resource="@mipmap/ic_launcher" />
+      <!-- messaging  -->
+<meta-data
+    android:name="com.google.firebase.messaging.default_notification_icon"
+    android:resource="@mipmap/ic_launcher" />
 
-      <!-- Firebase Messaging Service -->
-      <service
-        android:name="com.google.firebase.messaging.FirebaseMessagingService"
-        android:exported="true">
-        <intent-filter>
-            <action android:name="com.google.firebase.MESSAGING_EVENT" />
-        </intent-filter>
-      </service>
-
-      <!-- Main Activity -->
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -42,6 +31,8 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
-
     </application>
 </manifest>
+
+
+
